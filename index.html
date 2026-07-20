@@ -9,289 +9,227 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<script src="script.js"></script>
-
 <body>
-    <header>
+
+<header>
     <nav class="navbar">
+
         <div class="logo">
             🧠 MindSpace
         </div>
 
         <ul class="nav-links">
             <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Journal</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#journal">Journal</a></li>
+            <li><a href="#register">Register</a></li>
         </ul>
 
         <button class="btn">Get Started</button>
         <button id="themeBtn">🌙</button>
 
         <div class="menu-toggle">
-                ☰
+            ☰
         </div>
 
     </nav>
-    </header>
+</header>
 
-        <section class="hero">
+<!-- Hero Section -->
 
-            <button id="startBtn" class="hero-btn">
-                 Get Started
-            </button>
+<section class="hero">
 
-            <div class="hero-text">
+    <div class="hero-text">
 
-                 <h1>Your Mental Wellness Companion</h1>
+        <h1>Your Mental Wellness Companion</h1>
 
-                     <p>
-                        Track your mood, write your daily journal,
-                         and build healthy habits for a happier life.
-                    </p>
+        <p>
+            Track your mood, write your daily journal,
+            and build healthy habits for a happier life.
+        </p>
 
-             <button class="hero-btn">Get Started</button>
-
-             <button class="hero-btn2">Learn More</button>
-
-              </div>
-
-             <div class="hero-image">
-
-                <img src="https://images.unsplash.com/photo-1493836512294-502baa1986e2?w=500" alt="Mental Wellness">
-
-            </div>
-
-        </section>
-
-    <section class="mood-section">
-         <h2>How are you feeling today?</h2>
-
-            <div class="mood-container">
-
-                <div class="mood-card">😊</div>
-                <div class="mood-card">😀</div>
-                <div class="mood-card">😐</div>
-                <div class="mood-card">😔</div>
-                <div class="mood-card">😡</div>
-
-             </div>
-
-         <p id="message"></p>
-
-         <button id="resetMood">Reset Mood</button>
-
-    </section>
-
-    <section class="journal-section">
-
-        <h2>Daily Journal</h2>
-
-        <textarea
-            id="journalInput"
-            placeholder="Write about your day...">
-        </textarea>
-
-        <br>
-
-        <button id="saveJournal">
-            Save Journal
+        <button id="startBtn" class="hero-btn">
+            Get Started
         </button>
 
-        <button type="button" onclick="editJournal()">
-            Edit
+        <button class="hero-btn2">
+            Learn More
         </button>
 
-        <input
+    </div>
+
+    <div class="hero-image">
+        <img
+            src="https://images.unsplash.com/photo-1493836512294-502baa1986e2?w=500"
+            alt="Mental Wellness">
+    </div>
+
+</section>
+
+<!-- Mood Tracker -->
+
+<section class="mood-section">
+
+    <h2>How are you feeling today?</h2>
+
+    <div class="mood-container">
+
+        <div class="mood-card">😊</div>
+        <div class="mood-card">😀</div>
+        <div class="mood-card">😐</div>
+        <div class="mood-card">😔</div>
+        <div class="mood-card">😡</div>
+
+    </div>
+
+    <p id="message"></p>
+
+    <button id="resetMood">
+        Reset Mood
+    </button>
+
+</section>
+
+<!-- Journal -->
+
+<section class="journal-section" id="journal">
+
+    <h2>Daily Journal</h2>
+
+    <textarea
+        id="journalInput"
+        placeholder="Write about your day...">
+    </textarea>
+
+    <br>
+
+    <button id="saveJournal">
+        Save Journal
+    </button>
+
+    <input
+        type="text"
+        id="searchJournal"
+        placeholder="Search your journal...">
+
+    <h3>Your Entries</h3>
+
+    <div id="journalList"></div>
+
+</section>
+
+<!-- Daily Quote -->
+
+<section class="quote-section">
+
+    <h2>Daily Motivation</h2>
+
+    <p id="quote">
+        Click the button below for a motivational quote.
+    </p>
+
+    <button id="quoteBtn">
+        New Quote
+    </button>
+
+</section>
+
+<!-- AI Suggestion -->
+
+<section class="ai-section">
+
+    <h2>MindSpace Suggestion</h2>
+
+    <p id="aiSuggestion">
+        Select your mood to receive a wellness suggestion.
+    </p>
+
+</section>
+
+<!-- Registration Form -->
+
+<section id="register" class="register-section">
+
+    <h2>Create Your Account</h2>
+
+    <form id="registerForm" novalidate>
+
+        <div class="form-group">
+            <label for="name">Full Name</label>
+
+            <input
                 type="text"
-                id="searchJournal"
-                placeholder="Search your journal...">
+                id="name"
+                placeholder="Enter your full name">
 
-        <h3>Your Entries</h3>
-
-        <div id="journalList"></div>
-
-    </section>
-
-    <section class="motivation-section">
-
-        <h2>Daily Motivation</h2>
-
-        <p id="quote">
-            Click the button to get today's motivation.
-        </p>
-
-        <button id="quoteBtn">
-            New Quote
-        </button>
-
-        <h2>AI Wellness Suggestion</h2>
-
-        <p id="aiSuggestion">
-            Select your mood to receive a suggestion.
-        </p>
-
-    </section>
-
-    <section class="about">
-
-        <h2>About MindSpace</h2>
-
-            <p class="about-text">
-                MindSpace is a simple mental wellness platform that helps users
-                track their daily mood, write personal journals, and build
-                healthier habits. Our goal is to encourage self-care and
-                emotional well-being through an easy-to-use interface.
-            </p>
-
-        <div class="about-container">
-
-            <div class="about-card">
-                <h3>😊 Mood Tracking</h3>
-                <p>Track your emotions every day and understand your feelings.</p>
-            </div>
-
-            <div class="about-card">
-                <h3>📖 Daily Journal</h3>
-                <p>Write your thoughts privately and reflect on your day.</p>
-            </div>
-
-            <div class="about-card">
-                <h3>💡 Positive Habits</h3>
-                <p>Build healthy routines with daily motivation and inspiration.</p>
-            </div>
-
+            <small id="nameError" class="error-message"></small>
         </div>
 
-    </section>
+        <div class="form-group">
+            <label for="email">Email Address</label>
 
-    <section class="features">
+            <input
+                type="email"
+                id="email"
+                placeholder="Enter your email">
 
-        <h2>Our Features</h2>
-        <p>Everything you need to improve your mental well-being.</p>
-
-        <div class="feature-container">
-
-            <div class="feature-card">
-                <div class="icon">😊</div>
-                <h3>Mood Tracker</h3>
-                <p>Track your mood every day with a single click.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="icon">📖</div>
-                <h3>Daily Journal</h3>
-                <p>Write your daily thoughts and emotions safely.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="icon">🤖</div>
-                <h3>AI Suggestions</h3>
-                <p>Receive wellness tips based on your mood.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="icon">📊</div>
-                <h3>Mood History</h3>
-                <p>View your emotional journey over time.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="icon">🌙</div>
-                <h3>Dark Mode</h3>
-                <p>Enjoy a comfortable experience day and night.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="icon">🔒</div>
-                <h3>Privacy</h3>
-                <p>Your journal entries stay secure on your device.</p>
-            </div>
-
+            <small id="emailError" class="error-message"></small>
         </div>
 
-    </section>
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
 
-<h2>Mood Statistics</h2>
+            <input
+                type="tel"
+                id="phone"
+                placeholder="Enter 10-digit phone number">
 
-    <div id="stats"></div>
+            <small id="phoneError" class="error-message"></small>
+        </div>
 
-    <div class="container">
+        <div class="form-group">
+            <label for="password">Password</label>
 
-    <h1>Registration Form</h1>
+            <input
+                type="password"
+                id="password"
+                placeholder="Create a password">
 
-    <form id="registerForm">
+            <small id="passwordError" class="error-message"></small>
+        </div>
 
-        <label>Name</label>
+        <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
 
-        <input
-        type="text"
-        id="name">
+            <input
+                type="password"
+                id="confirmPassword"
+                placeholder="Confirm your password">
 
-        <label>Email</label>
+            <small id="confirmPasswordError" class="error-message"></small>
+        </div>
 
-        <input
-        type="email"
-        id="email">
-
-        <label>Phone</label>
-
-        <input
-        type="text"
-        id="phone">
-
-        <label>Password</label>
-
-        <input
-        type="password"
-        id="password">
-
-        <label>Confirm Password</label>
-
-        <input
-        type="password"
-        id="confirmPassword">
-
-        <label>Name</label>
-
-        <input
-        type="text"
-        id="name">
-
-        <small id="nameError"></small>
-
-        <small id="emailError"></small>
-
-        <small id="phoneError"></small>
-
-        <small id="passwordError"></small>
-
-        <small id="confirmPasswordError"></small>
-
-        <button type="submit">
+        <button type="submit" class="submit-btn">
             Register
         </button>
 
     </form>
 
-    <p
-        id="successMessage"
-        aria-live="polite">
+    <p id="successMessage"></p>
+
+</section>
+
+<!-- Footer -->
+
+<footer>
+
+    <p>
+        © 2026 MindSpace | Mental Wellness & Mood Tracker
     </p>
 
-    <input
-        type="email"
-        id="email"
-        aria-describedby="emailError">
+</footer>
 
-    <small
-        id="emailError"
-        role="alert"></small>
-
-    <input aria-describedby="emailError">
-
-</div>
+<script src="script.js"></script>
 
 </body>
-
 </html>
