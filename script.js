@@ -1,372 +1,459 @@
-console.log("Welcome to MindSpace!");
-alert("Welcome to MindSpace!");
+document.addEventListener("DOMContentLoaded", function () {
 
-const startButton = document.getElementById("startBtn");
+    console.log("Welcome to MindSpace!");
 
-startButton.addEventListener("click", function () 
-    {
-        alert("Welcome to your Mental Wellness Journey! 🌿");
-    });
+    // ==========================
+    // Start Button
+    // ==========================
+
+    const startButton = document.getElementById("startBtn");
+
+    if (startButton) {
+        startButton.addEventListener("click", function () {
+            alert("Welcome to your Mental Wellness Journey! 🌿");
+        });
+    }
+
+    // ==========================
+    // Mood Tracker
+    // ==========================
 
     const moods = document.querySelectorAll(".mood-card");
     const message = document.getElementById("message");
+    const aiSuggestion = document.getElementById("aiSuggestion");
 
-    moods.forEach(function(mood){
+    const suggestions = {
+        "😊": "Keep smiling and spread positivity! 🌞",
+        "😀": "Great day! Try helping someone today. ❤️",
+        "😐": "Take a short break and relax. ☕",
+        "😔": "Talk to someone you trust. Tomorrow is a new day. 💙",
+        "😡": "Take deep breaths and go for a short walk. 🌿"
+    };
 
-        mood.addEventListener("click", function(){
+    moods.forEach(function (mood) {
 
-            moods.forEach(function(item){
+        mood.addEventListener("click", function () {
+
+            moods.forEach(function (item) {
                 item.classList.remove("selected");
             });
 
             mood.classList.add("selected");
 
-            message.textContent = "Your mood is " + mood.textContent + " today 💙";
-                localStorage.setItem("selectedMood", mood.textContent);
+            localStorage.setItem("selectedMood", mood.textContent);
+
+            if (message) {
+                message.textContent =
+                    "Your mood is " + mood.textContent + " today 💙";
+            }
+
+            if (aiSuggestion) {
+                aiSuggestion.textContent =
+                    suggestions[mood.textContent] ||
+                    "Take care of yourself 💙";
+            }
+
         });
 
     });
 
-const savedMood = localStorage.getItem("selectedMood");
+    // ==========================
+    // Load Saved Mood
+    // ==========================
 
-if(savedMood){
+    const savedMood = localStorage.getItem("selectedMood");
 
-    moods.forEach(function(mood){
+    if (savedMood) {
 
-        if(mood.textContent === savedMood){
+        moods.forEach(function (mood) {
 
-            mood.classList.add("selected");
+            if (mood.textContent === savedMood) {
 
-            message.textContent = "Your mood is " + savedMood + " today 💙";
+                mood.classList.add("selected");
 
-        }
+                if (message) {
+                    message.textContent =
+                        "Your mood is " + savedMood + " today 💙";
+                }
 
-    });
+                if (aiSuggestion) {
+                    aiSuggestion.textContent =
+                        suggestions[savedMood] ||
+                        "Take care of yourself 💙";
+                }
 
-}
-const resetButton = document.getElementById("resetMood");
+            }
 
-resetButton.addEventListener("click",function(){
+        });
 
-    localStorage.removeItem("selectedMood");
-
-    moods.forEach(function(mood){
-        mood.classList.remove("selected");
-    });
-
-    message.textContent="Mood Reset Successfully!";
-});
-
-const journalInput = document.getElementById("journalInput");
-const saveJournal = document.getElementById("saveJournal");
-const journalList = document.getElementById("journalList");
-
-let journals = JSON.parse(localStorage.getItem("journals")) || [];
-
-displayJournals();
-
-saveJournal.addEventListener("click", function(){
-
-    if(journalInput.value.trim() === ""){
-        alert("Please write something!");
-        return;
     }
 
-    const journal = {
+    // ==========================
+    // Reset Mood
+    // ==========================
 
-        date: new Date().toLocaleDateString(),
+    const resetButton = document.getElementById("resetMood");
 
-        text: journalInput.value
+    if (resetButton) {
 
-    };
+        resetButton.addEventListener("click", function () {
 
-    journals.push(journal);
+            localStorage.removeItem("selectedMood");
 
-    localStorage.setItem("journals", JSON.stringify(journals));
+            moods.forEach(function (mood) {
+                mood.classList.remove("selected");
+            });
 
-    journalInput.value="";
+            if (message) {
+                message.textContent = "Mood Reset Successfully!";
+            }
+
+            if (aiSuggestion) {
+                aiSuggestion.textContent = "";
+            }
+
+        });
+
+    }
+
+    // ==========================
+    // Journal Variables
+    // ==========================
+
+    const journalInput = document.getElementById("journalInput");
+    const saveJournal = document.getElementById("saveJournal");
+    const journalList = document.getElementById("journalList");
+
+    let journals =
+        JSON.parse(localStorage.getItem("journals")) || [];
+            // ==========================
+    // Display Journals
+    // ==========================
+
+    function displayJournals() {
+
+        if (!journalList) return;
+
+        journalList.innerHTML = "";
+
+        journals.forEach(function (entry, index) {
+
+            journalList.innerHTML += `
+                <div class="entry">
+                    <strong>${entry.date}</strong>
+                    <p>${entry.text}</p>
+                    <small>Mood: ${entry.mood || "Not Selected"}</small>
+                    <br><br>
+
+                    <button onclick="editJournal(${index})">
+                        Edit
+                    </button>
+
+                    <button onclick="deleteJournal(${index})">
+                        Delete
+                    </button>
+                </div>
+            `;
+
+        });
+
+    }
 
     displayJournals();
 
-});
+    // ==========================
+    // Save Journal
+    // ==========================
 
-function displayJournals(){
+    if (saveJournal) {
 
-    journalList.innerHTML += `
-        <div class="entry">
+        saveJournal.addEventListener("click", function () {
 
-        <strong>${entry.date}</strong>
+            if (journalInput.value.trim() === "") {
+                alert("Please write something!");
+                return;
+            }
 
-        <p>${entry.text}</p>
+            const journal = {
 
-        <button onclick="deleteJournal(${index})">
-        Delete
-        </button>
+                date: new Date().toLocaleDateString(),
+                text: journalInput.value,
+                mood: localStorage.getItem("selectedMood")
 
-        </div>
-        `;
+            };
 
-    function deleteJournal(index){
+            journals.push(journal);
 
-        journals.splice(index,1);
+            localStorage.setItem(
+                "journals",
+                JSON.stringify(journals)
+            );
 
-        localStorage.setItem("journals",
-        JSON.stringify(journals));
+            journalInput.value = "";
+
+            displayJournals();
+
+        });
+
+    }
+
+    // ==========================
+    // Delete Journal
+    // ==========================
+
+    function deleteJournal(index) {
+
+        journals.splice(index, 1);
+
+        localStorage.setItem(
+            "journals",
+            JSON.stringify(journals)
+        );
+
         displayJournals();
 
     }
-};
 
-const themeBtn = document.getElementById("themeBtn");
+    // ==========================
+    // Edit Journal
+    // ==========================
 
-if(localStorage.getItem("theme") === "dark"){
-    document.body.classList.add("dark");
-    themeBtn.textContent = "☀️";
-}
+    function editJournal(index) {
 
-themeBtn.addEventListener("click", function(){
+        if (!journalInput) return;
 
-    document.body.classList.toggle("dark");
+        journalInput.value = journals[index].text;
 
-    if(document.body.classList.contains("dark")){
+        journals.splice(index, 1);
 
-        localStorage.setItem("theme","dark");
-        themeBtn.textContent = "☀️";
+        localStorage.setItem(
+            "journals",
+            JSON.stringify(journals)
+        );
 
-    }else{
-
-        localStorage.setItem("theme","light");
-        themeBtn.textContent = "🌙";
+        displayJournals();
 
     }
 
-});
+    window.deleteJournal = deleteJournal;
+    window.editJournal = editJournal;
 
-const quotes = [
-    "Believe in yourself. 🌸",
-    "Every small step counts. 💙",
-    "Your mental health matters. 🌿",
-    "Be kind to yourself today. 😊",
-    "You are stronger than you think. 💪",
-    "Progress is better than perfection. ⭐"
-];
+    // ==========================
+    // Search Journal
+    // ==========================
 
-const quote = document.getElementById("quote");
-const quoteBtn = document.getElementById("quoteBtn");
+    const searchJournal =
+        document.getElementById("searchJournal");
 
-quoteBtn.addEventListener("click", function(){
+    if (searchJournal) {
 
-    const randomIndex = Math.floor(Math.random() * quotes.length);
+        searchJournal.addEventListener("input", function () {
 
-    quote.textContent = quotes[randomIndex];
+            const search =
+                this.value.toLowerCase();
 
-});
+            document.querySelectorAll(".entry")
+                .forEach(function (entry) {
 
-const suggestions = {
+                    if (
+                        entry.textContent
+                            .toLowerCase()
+                            .includes(search)
+                    ) {
 
-    "😊":"Keep smiling and spread positivity! 🌞",
+                        entry.style.display = "";
 
-    "😀":"Great day! Try helping someone today. ❤️",
+                    } else {
 
-    "😐":"Take a short break and relax. ☕",
+                        entry.style.display = "none";
 
-    "😔":"Talk to someone you trust and remember tomorrow is a new day. 💙",
+                    }
 
-    "😡":"Take deep breaths and go for a short walk. 🌿"
+                });
 
-};
-
-const aiSuggestion = document.getElementById("aiSuggestion");
-
-aiSuggestion.textContent = suggestions[mood.textContent];
-
-const searchJournal = document.getElementById("searchJournal");
-
-searchJournal.addEventListener("input",function(){
-
-const search = this.value.toLowerCase();
-
-const entries = document.querySelectorAll(".entry");
-
-entries.forEach(function(entry){
-
-if(entry.textContent.toLowerCase().includes(search)){
-
-entry.style.display="block";
-
-}else{
-
-entry.style.display="none";
-
-}
-
-});
-
-});
-
-function editJournal(index){
-
-journalInput.value=journals[index].text;
-
-journals.splice(index,1);
-
-displayJournals();
-
-}
-
-const stats=document.getElementById("stats");
-
-let moodCount={};
-
-journals.forEach(function(item){
-
-moodCount[item.mood]=(moodCount[item.mood]||0)+1;
-
-});
-
-const form = document.getElementById("registerForm");
-
-form.addEventListener("submit", function(event){
-
-    event.preventDefault();
-
-    alert("Form Submitted!");
-
-    let valid=true;
-
-    if(name===""){
-
-        document.getElementById("nameError").textContent="Name is required";
-
-        valid=false;
-
-    }else{
-
-        document.getElementById("nameError").textContent="";
+        });
 
     }
 
-});
+    // ==========================
+    // Theme Toggle
+    // ==========================
 
-const name=document.getElementById("name").value;
+    const themeBtn =
+        document.getElementById("themeBtn");
 
-const email=document.getElementById("email").value;
+    if (localStorage.getItem("theme") === "dark") {
 
-const phone=document.getElementById("phone").value;
+        document.body.classList.add("dark");
 
-const password=document.getElementById("password").value;
+        if (themeBtn) {
+            themeBtn.textContent = "☀️";
+        }
 
-const confirmPassword=document.getElementById("confirmPassword").value;
-
-if(valid){
-
-alert("Registration Successful! 🎉");
-
-}
-
-button.addEventListener("click",function(){
-
-});
-
-let valid=true;
-valid=false;
-
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-if(email===""){
-    document.getElementById("emailError").textContent="Email is required";
-    valid=false;
-
-}else if(!emailPattern.test(email)){
-
-    document.getElementById("emailError").textContent="Enter a valid email";
-
-    valid=false;
-
-}else{
-
-    document.getElementById("emailError").textContent="";
-
-}
-
-const phonePattern=/^[0-9]{10}$/;
-if(phone===""){
-
-document.getElementById("phoneError").textContent="Phone number is required";
-
-valid=false;
-
-}else if(!phonePattern.test(phone)){
-
-document.getElementById("phoneError").textContent="Phone number must contain exactly 10 digits";
-
-valid=false;
-
-}else{
-
-document.getElementById("phoneError").textContent="";
-
-}
-
-const passwordPattern =
-/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
-if(password===""){
-
-document.getElementById("passwordError").textContent="Password is required";
-
-valid=false;
-
-}else if(!passwordPattern.test(password)){
-
-document.getElementById("passwordError").textContent="Password must contain uppercase, lowercase, number, special character and be at least 8 characters.";
-
-valid=false;
-
-}else{
-
-document.getElementById("passwordError").textContent="";
-
-}
-if(confirmPassword===""){
-
-document.getElementById("confirmPasswordError").textContent="Confirm Password is required";
-
-valid=false;
-
-}else if(password!==confirmPassword){
-
-document.getElementById("confirmPasswordError").textContent="Passwords do not match";
-
-valid=false;
-
-}else{
-
-document.getElementById("confirmPasswordError").textContent="";
-
-}
-alert("Registration Successful!");
-document.getElementById("successMessage").textContent =
-"🎉 Registration Successful! Welcome " + name + ".";
-
-form.reset();
-const nameInput = document.getElementById("name");
-
-if(name===""){
-    nameError.textContent="Name is required";
-    nameInput.classList.add("error");
-    nameInput.classList.remove("success");
-}else{
-    nameError.textContent="";
-    nameInput.classList.remove("error");
-    nameInput.classList.add("success");
-}
-document.getElementById("email").addEventListener("input", function(){
-
-    if(emailPattern.test(this.value)){
-        emailError.textContent="";
-        this.classList.add("success");
-        this.classList.remove("error");
     }
 
-});
-emailInput.setAttribute("aria-invalid","true");
-emailInput.setAttribute("aria-invalid","false");
+    if (themeBtn) {
+
+        themeBtn.addEventListener("click", function () {
+
+            document.body.classList.toggle("dark");
+
+            if (document.body.classList.contains("dark")) {
+
+                localStorage.setItem("theme", "dark");
+                themeBtn.textContent = "☀️";
+
+            } else {
+
+                localStorage.setItem("theme", "light");
+                themeBtn.textContent = "🌙";
+
+            }
+
+        });
+
+    }
+
+    // ==========================
+    // Daily Quotes
+    // ==========================
+
+    const quotes = [
+
+        "Believe in yourself. 🌸",
+        "Every small step counts. 💙",
+        "Your mental health matters. 🌿",
+        "Be kind to yourself today. 😊",
+        "You are stronger than you think. 💪",
+        "Progress is better than perfection. ⭐"
+
+    ];
+
+    const quote =
+        document.getElementById("quote");
+
+    const quoteBtn =
+        document.getElementById("quoteBtn");
+
+    if (quoteBtn) {
+
+        quoteBtn.addEventListener("click", function () {
+
+            const random =
+                Math.floor(Math.random() * quotes.length);
+
+            if (quote) {
+
+                quote.textContent =
+                    quotes[random];
+
+            }
+
+        });
+
+    }
+
+        // ==========================
+    // Registration Form Validation
+    // ==========================
+
+    const form = document.getElementById("registerForm");
+
+    if (form) {
+
+        form.addEventListener("submit", function (event) {
+
+            event.preventDefault();
+
+            let valid = true;
+
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+
+            const nameError = document.getElementById("nameError");
+            const emailError = document.getElementById("emailError");
+            const phoneError = document.getElementById("phoneError");
+            const passwordError = document.getElementById("passwordError");
+            const confirmPasswordError = document.getElementById("confirmPasswordError");
+            const successMessage = document.getElementById("successMessage");
+
+            // Clear old errors
+            nameError.textContent = "";
+            emailError.textContent = "";
+            phoneError.textContent = "";
+            passwordError.textContent = "";
+            confirmPasswordError.textContent = "";
+            successMessage.textContent = "";
+
+            // Name Validation
+            if (name === "") {
+                nameError.textContent = "Name is required";
+                valid = false;
+            }
+
+            // Email Validation
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (email === "") {
+                emailError.textContent = "Email is required";
+                valid = false;
+            } else if (!emailPattern.test(email)) {
+                emailError.textContent = "Enter a valid email";
+                valid = false;
+            }
+
+            // Phone Validation
+            const phonePattern = /^[0-9]{10}$/;
+
+            if (phone === "") {
+                phoneError.textContent = "Phone number is required";
+                valid = false;
+            } else if (!phonePattern.test(phone)) {
+                phoneError.textContent = "Phone number must contain exactly 10 digits";
+                valid = false;
+            }
+
+            // Password Validation
+            const passwordPattern =
+                /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
+            if (password === "") {
+                passwordError.textContent = "Password is required";
+                valid = false;
+            } else if (!passwordPattern.test(password)) {
+                passwordError.textContent =
+                    "Password must contain uppercase, lowercase, number, special character and be at least 8 characters.";
+                valid = false;
+            }
+
+            // Confirm Password
+            if (confirmPassword === "") {
+                confirmPasswordError.textContent =
+                    "Confirm Password is required";
+                valid = false;
+            } else if (password !== confirmPassword) {
+                confirmPasswordError.textContent =
+                    "Passwords do not match";
+                valid = false;
+            }
+
+            // Success
+            if (valid) {
+
+                alert("Registration Successful! 🎉");
+
+                successMessage.textContent =
+                    "🎉 Registration Successful! Welcome " + name + ".";
+
+                form.reset();
+
+            }
+
+        });
+
+    }
+
+}); // End DOMContentLoaded
